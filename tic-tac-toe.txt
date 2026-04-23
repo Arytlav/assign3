@@ -1,0 +1,36 @@
+1) Forked the starter repository: I went to https://github.com/UCLA-35L/assign3 on GitHub and i clicked the Forked button to create my own copy of the repository under my GitHub account.
+2)Cloned the repository: I ran the git clone https://github.com/arytlav/assign3 command in the terminal to clone my forked repository.
+this created a folder assign3 on my mac with all the starter files insides.
+3) Set up the environment: I navigated into the project folder by running cd assign3 then i ran the ./helper init command to intialize the environment.
+I believe this installed all the necessary dependencies . at the end it said "Sucess: Initialized your system to work on Assignment 3."
+4) I started the devellopement server : I ran the ./helper dev command to start the app. This started a local developement server and the app became visible in the browser at http://localhost:5173/. The starter app showed "Hello World" with a button and some text.
+5) I opened the React tutorial: I opened the official React tic-tac-toe tutorial at https://react.dev/learn/tutorial-tic-tac-toe.
+this tutorial walks through building a tic-tac-toe game step by step and also teaches the core React concepts: Components, Props, State, Lifting state up
+6) I replaced the starter code in src/App.jsx:
+I opened src/App.jsx in VS code and i deleted all the starter code that was in there then i started following the tutorial step by step
+6a.I created a basic Square component that renders a button with X:
+function Square() {
+  return <button className="square">X</button>;
+}
+6b. I renamed the component to Board and I added 9 buttons in 3 rows
+to make a 3x3 grid using div className="board-row".
+6c. I created a separate Square component and passed values as props
+from Board down to each Square using the value prop.
+6d. I added a handleClick function inside Square with console.log
+to test that clicking worked. Verified it worked by opening
+Chrome DevTools console and clicking squares.
+6e. I added useState to track each square's value and display
+X when clicked.
+6f. Lifted state up to Board component so it could track all
+9 squares at once using an array of 9 null values.
+6g. I added xIsNext to alternate turns between X and O.
+6h. I added calculateWinner function to detect winning combinations.
+6i. I added Game component to manage move history and time travel.
+7) I tested the game in the browser: I opened Chrome and went to http://localhost:5173/ to test the game. After that I proceed to verify that the following wotrked:
+.clicking on a square placed an X
+.clicking on another square placed an O
+.the Players alternate between X and O
+.clicking an already filled square does nothing
+.when a player gets 3 in a row it shows "Winner: X" or "Winner: O"
+.the move history list on the right updates after each move
+.clicking "Go to move #" buttons jumps back to that board state
