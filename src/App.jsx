@@ -1,25 +1,53 @@
 import { useState } from 'react';
 
-function Square({ value, onSquareClick }) {
+function Square({ value, onSquareClick, isSelected }) {
   return (
-    <button className="square" onClick={onSquareClick}>
+    <button 
+    className={"square" + (isSelected ? " selected" : "")}
+    onClick={onSquareClick}
+    >
       {value}
     </button>
   );
 }
 
 function Board({ xIsNext, squares, onPlay }) {
+  const [selectedSquare, setSelectedSquare] = useState(null);
   function handleClick(i) {
-    if (calculateWinner(squares) || squares[i]) {
+    if (calculateWinner(squares)) {
       return;
     }
-    const nextSquares = squares.slice();
-    if (xIsNext) {
-      nextSquares[i] = 'X';
+    const currentPlayer = xIsNext ? 'X' : 'O';
+    const currentCount = countPieces (squares, currentPlayer);
+    if (currentCount < 3) {
+      if (squares[i]) {
+        return;
+      }
+      const nextSquares = squares.slice();
+      nextSquares[i] = currentPlayer;
+      onPlay(nextSquares);
     } else {
-      nextSquares[i] = 'O';
+      if (selectedSquare === null) {
+        if (squares[i] === currentPlayer) {
+          setSelectedSquare(i);
+
+        }
+      } else {
+        if (squares[i] === null && isAdjacent(selectedSquare, i)) {
+          if (centerRuleCheck(squares, selectedSquare, i, currentPlayer)) {
+            setSelectedSquare(null);
+            return;
+          }
+          const nextSquares = squares.slice();
+          nextSquares[selectedSquare] = null;
+          nextSquares[i] = currentPlayer;
+          setSelectedSquare(null);
+          onPlay(nextSquares);
+        } else {
+          setSelectedSquare(null);
+        }
+      }
     }
-    onPlay(nextSquares);
   }
 
   const winner = calculateWinner(squares);
@@ -34,19 +62,19 @@ function Board({ xIsNext, squares, onPlay }) {
     <>
       <div className="status">{status}</div>
       <div className="board-row">
-        <Square value={squares[0]} onSquareClick={() => handleClick(0)} />
-        <Square value={squares[1]} onSquareClick={() => handleClick(1)} />
-        <Square value={squares[2]} onSquareClick={() => handleClick(2)} />
+        <Square value={squares[0]} onSquareClick={() => handleClick(0)} isSelected={selectedSquare === 0} />
+        <Square value={squares[1]} onSquareClick={() => handleClick(1)} isSelected={selectedSquare === 1} />
+        <Square value={squares[2]} onSquareClick={() => handleClick(2)} isSelected={selectedSquare === 2} />
       </div>
       <div className="board-row">
-        <Square value={squares[3]} onSquareClick={() => handleClick(3)} />
-        <Square value={squares[4]} onSquareClick={() => handleClick(4)} />
-        <Square value={squares[5]} onSquareClick={() => handleClick(5)} />
+        <Square value={squares[3]} onSquareClick={() => handleClick(3)} isSelected={selectedSquare === 3} />
+        <Square value={squares[4]} onSquareClick={() => handleClick(4)} isSelected={selectedSquare === 4} />
+        <Square value={squares[5]} onSquareClick={() => handleClick(5)} isSelected={selectedSquare === 5} />
       </div>
       <div className="board-row">
-        <Square value={squares[6]} onSquareClick={() => handleClick(6)} />
-        <Square value={squares[7]} onSquareClick={() => handleClick(7)} />
-        <Square value={squares[8]} onSquareClick={() => handleClick(8)} />
+        <Square value={squares[6]} onSquareClick={() => handleClick(6)} isSelected={selectedSquare === 6} />
+        <Square value={squares[7]} onSquareClick={() => handleClick(7)} isSelected={selectedSquare === 7} />
+        <Square value={squares[8]} onSquareClick={() => handleClick(8)} isSelected={selectedSquare === 8} />
       </div>
     </>
   );
@@ -94,6 +122,18 @@ export default function Game() {
   );
 }
 
+function centerRuleCheck(squares, from, to, player) {
+  if (squares[4] === player && countPieces(squares, player) ===3) {
+    const nextSquares = squares.slice();
+    nextSquares[from] = null;
+    nextSquares[to] = player;
+    if (to !== 4 && from !==4 && !calculateWinner(nextSquares)) {
+      return true;
+    }
+  }
+  return false;
+}
+
 function calculateWinner(squares) {
   const lines = [
     [0, 1, 2],
@@ -112,4 +152,15 @@ function calculateWinner(squares) {
     }
   }
   return null;
+}
+function countPieces (squares, player) {
+  return squares.filter(square => square === player).length;
+}
+function isAdjacent(from, to) {
+  const fromRow = Math.floor(from / 3);
+  const fromCol = from % 3;
+  const toRow = Math.floor(to / 3);
+  const toCol = to % 3;
+  return Math.abs(fromRow - toRow) <= 1 && Math.abs(fromCol - toCol) <= 1;
+
 }

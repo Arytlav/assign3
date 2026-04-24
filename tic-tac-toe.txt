@@ -34,3 +34,9 @@ X when clicked.
 .when a player gets 3 in a row it shows "Winner: X" or "Winner: O"
 .the move history list on the right updates after each move
 .clicking "Go to move #" buttons jumps back to that board state
+8) I commited the code to GitHub:
+I staged and committed the completed tic-tac-toe code:
+git add .
+git commit -m "completed tic-tac-toe tutorial"
+git push
+
